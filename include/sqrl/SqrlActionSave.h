@@ -29,7 +29,7 @@ namespace libsqrl
         size_t getString( char * buf, size_t * len );
         void setString( const char * buf, size_t len );
 
-        int run( int cs );
+        int run ( int cs ) override;
 
     protected:
         bool t1_init();
@@ -45,7 +45,7 @@ namespace libsqrl
         size_t buffer_len;
         SqrlCrypt *crypt;
         SqrlBlock *block;
-        void onRelease();
+        void onRelease() override;
     };
 }
 #endif // SQRLACTIONSAVE_H

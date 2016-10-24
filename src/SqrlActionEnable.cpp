@@ -9,3 +9,8 @@
 #include "sqrl_internal.h"
 #include "SqrlActionEnable.h"
 
+using libsqrl::SqrlActionEnable;
+
+SqrlActionEnable::SqrlActionEnable() {
+
+}

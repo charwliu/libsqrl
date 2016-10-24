@@ -17,6 +17,7 @@ namespace libsqrl
     class DLL_PUBLIC SqrlActionEnable : public SqrlSiteAction
     {
 
+    	SqrlActionEnable();
     };
 }
 #endif // SQRLACTIONENABLE_H

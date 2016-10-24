@@ -9,3 +9,8 @@
 #include "sqrl_internal.h"
 #include "SqrlActionDisable.h"
 
+using libsqrl::SqrlActionDisable;
+
+SqrlActionDisable::SqrlActionDisable() {
+
+}

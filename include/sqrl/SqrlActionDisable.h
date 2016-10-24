@@ -14,9 +14,8 @@
 
 namespace libsqrl
 {
-    class DLL_PUBLIC SqrlActionDisable : public SqrlSiteAction
-    {
-
+    class DLL_PUBLIC SqrlActionDisable : public SqrlSiteAction {
+    	SqrlActionDisable();
     };
 }
 #endif // SQRLACTIONDISABLE_H

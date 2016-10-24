@@ -1,0 +1,6 @@
+Name: @PACKAGE_NAME@
+Version: @PACKAGE_VERSION@
+Description: A SQRL protocol library
+
+Libs: -L${pcfiledir}/src/sqrl -lsqrl
+Cflags: -I${pcfiledir}/src/include -I@top_srcdir@/src/include -I@top_srcdir@/src//include/sqrl

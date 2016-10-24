@@ -28,9 +28,20 @@ std::mutex *libsqrl::SqrlEntropy::mutex = NULL;
 std::thread *libsqrl::SqrlEntropy::thread = NULL;
 #endif
 
+struct sqrl_entropy_pool
+{
+    crypto_hash_sha512_state state;
+    int estimated_entropy;
+    int entropy_target;
+    bool initialized;
+    bool stopping;
+    int sleeptime;
+};
+
+
 #if defined(__MACH__)
 #include "rdrand.h"
-#include "SqrlEntropy_mac.h"
+#include "SqrlEntropy_Mac.h"
 #elif defined(_WIN32)
 #include "rdrand.h"
 #include "SqrlEntropy_Win.h"
@@ -168,7 +179,7 @@ namespace libsqrl
                     if( SqrlEntropy::estimated_entropy >= SqrlEntropy::entropy_target ) {
                         SqrlEntropy::sleeptime = SQRL_ENTROPY_REPEAT_SLOW;
                     }
-                    delete buf;
+                    delete []buf;
                 }
             }
             SqrlEntropy::mutex->unlock();

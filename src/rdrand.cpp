@@ -56,7 +56,7 @@ namespace libsqrl
 #else
         if( !rdrand_tested ) {
             rdrand_avail = false;
-            uint32_t tmp[4] = {-1};
+            uint32_t tmp[4] = {0xffffffff};
             cpuid( 0, tmp );
             if( !((memcmp( &tmp[1], "Genu", 4 ) == 0) &&
                 (memcmp( &tmp[3], "ineI", 4 ) == 0) &&

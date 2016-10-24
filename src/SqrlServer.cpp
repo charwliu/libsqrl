@@ -150,7 +150,7 @@ namespace libsqrl
         if( m ) {
             uint8_t mac[crypto_auth_BYTES];
             crypto_auth( mac, (unsigned char *)cstr, len, this->key );
-            SqrlString *v = SqrlBase64().decode( NULL, &(SqrlString( m )) );
+            SqrlString *v = SqrlBase64().decode( NULL, str ) ;
             if( v ) {
                 if( 0 == memcmp( mac, v->data(), SQRL_SERVER_MAC_LENGTH ) ) {
                     delete v;

@@ -15,7 +15,8 @@ For more details, see the LICENSE file included with this package.
 
 Sqrl_Client_Callbacks *SQRL_CLIENT_CALLBACKS;
 
-
+using namespace libsqrl;
+/*
 void sqrl_client_action_set_alternate_identity(
 	SqrlAction *action,
 	const char *altIdentity )
@@ -35,6 +36,8 @@ void sqrl_client_action_set_alternate_identity(
 void sqrl_client_call_select_alternate_identity( SqrlAction *action )
 {
 }
+
+*/
 
 bool sqrl_client_call_authentication_required( SqrlAction *t, Sqrl_Credential_Type credentialType )
 {
@@ -123,7 +126,7 @@ void sqrl_client_authenticate(
 	case SQRL_CREDENTIAL_HINT:
 		if( user->isHintLocked()) {
 			if( user->getHintLength() == credentialLength ) {
-				user->hintUnlock( action, credential, credentialLength );
+				user->hintUnlock( action, new SqrlString(credential, credentialLength) );
 			}
 		}
 		break;
@@ -133,10 +136,12 @@ void sqrl_client_authenticate(
 		}
 		break;
 	case SQRL_CREDENTIAL_NEW_PASSWORD:
+	/*
 		if( action->getType() == SQRL_action_IDENTITY_CHANGE_PASSWORD ) {
 			user->setPassword( credential, credentialLength );
 			sqrl_client_call_save_suggested( user );
 		}
+	*/
 		break;
 	}
 	sodium_memzero( credential, credentialLength );
@@ -172,44 +177,33 @@ DONE:
 
 bool sqrl_client_require_password( SqrlAction *action )
 {
-	bool retVal = true;
-	if( !action ) goto ERR;
+	if( !action ) return false;
 	SqrlUser *user = action->getUser();
-	if( !user ) goto ERR;
+	if( !user ) return false;
 	if( user->getPasswordLength() > 0 ) {
-		goto DONE;
+		return true;
 	}
 	if( sqrl_client_call_authentication_required( action, SQRL_CREDENTIAL_PASSWORD ) &&
 		user->getPasswordLength() > 0 ) {
-		goto DONE;
+		return true;
 	}
-
-ERR:
-	retVal = false;
-
-DONE:
-	return retVal;
 }
 
 bool sqrl_client_require_rescue_code( SqrlAction *action )
 {
 	bool retVal = true;
-	if( !action ) goto ERR;
+	if( !action ) return false;
 	SqrlUser *user = action->getUser();
-	if( !user ) goto ERR;
+	if( !user ) return false;
 	if( user->hasKey( KEY_RESCUE_CODE ) ) {
-		goto DONE;
+		return true;
 	}
 	if( sqrl_client_call_authentication_required( action, SQRL_CREDENTIAL_RESCUE_CODE ) &&
 		user->hasKey( KEY_RESCUE_CODE) ) {
-		goto DONE;
+
+		return true;
 	}
 
-ERR:
-	retVal = false;
-
-DONE:
-	return retVal;
 }
 
 /**
@@ -237,23 +231,17 @@ Sqrl_action_Status sqrl_client_export_user(
 	if( uri ) {
 		action->setUri(new SqrlUri(uri));
 		SqrlUri *suri = action->getUri();
-		if( !suri ) goto ERR;
-		if( suri->getScheme() != SQRL_SCHEME_FILE ) goto ERR;
-		if( ! action->getUser()->save(action)) goto ERR;
+		if( !suri ) return SQRL_action_STATUS_FAILED;
+		if( suri->getScheme() != SQRL_SCHEME_FILE ) return SQRL_action_STATUS_FAILED;
+		if( ! action->getUser()->save(action)) return SQRL_action_STATUS_FAILED;
 	} else {
-		if( !action->getUser()->saveToBuffer( action )) goto ERR;
+		if( !action->getUser()->saveToBuffer( action )) return SQRL_action_STATUS_FAILED;
 	}
 	status = SQRL_action_STATUS_SUCCESS;
-	goto DONE;
-
-ERR:
-	status = SQRL_action_STATUS_FAILED;
-
-DONE:
 	action->setStatus(status);
 	sqrl_client_call_action_complete( action );
 
-	action->release();
+//	action->release();
 	return status;
 }
 

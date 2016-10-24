@@ -2,6 +2,7 @@
 #include "SqrlEncoder.h"
 #include "SqrlString.h"
 #include "SqrlBigInt.h"
+#include <math.h>
 
 namespace libsqrl
 {
